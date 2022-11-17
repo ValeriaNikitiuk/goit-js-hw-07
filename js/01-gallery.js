@@ -16,6 +16,7 @@ galleryContainer.addEventListener("click", openImage );
 
 console.log(onCreateGalleryItems(galleryItems));
 
+let modalWind;
 
 function onCreateGalleryItems(galleryItems) {
     return galleryItems
@@ -40,20 +41,36 @@ function openImage(evt) {
     
   if (!evt.target.classList.contains('gallery__image')) {
     return
-  }
-  const instance = basicLightbox.create(`
-    <img src="${evt.target.dataset.source}" width="800" height="600">
-`)
-  instance.show();
+  };
+  createModalWindow(evt.target).show();
+};
+
+
+function createModalWindow(param) {
+  const html = `<div class="modal">
+  <img src="${param.dataset.source}" alt="${param.alt}" />
+ </div>`;
+
+ modalWind = basicLightbox.create(html, {
+    modalWindShow: () => {
+      window.addEventListener('keyup', onCloseModalKeyUp);
+    },
+    modalWindClose: () => {
+      window.removeEventListener('keyup', onCloseModalKeyUp);
+    },
+  });
+  return modalWind;
+    
+}
+
   
 
  galleryContainer.addEventListener("keydown", (event) => {
     if (event.target === "Escape") {
    return
     }
-      instance.close();
-})
-};
+      modalWind.close();
+});
 
 
 
@@ -63,7 +80,7 @@ function openImage(evt) {
 
 
 
-  
+ 
 
 
   
